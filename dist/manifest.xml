@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
-  <Id>2ca74780-96aa-408b-baca-3f49db202e44</Id>
-  <Version>1.0.12.3</Version>
+  <Id>2ca74780-96aa-408b-baca-3f49db202e8b</Id>
+  <Version>1.0.0.0</Version>
   <ProviderName>Cloud.ru</ProviderName>
-  <DefaultLocale>en-EN</DefaultLocale>
-  <DisplayName DefaultValue="Cloud-Brief"/>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="CloudBrief"/>
   <Description DefaultValue="Test for RnDays"/>
   <IconUrl DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://cloud.ru"/>
   <AppDomains>
-    <AppDomain>echo0x00.github.io</AppDomain>
+    <AppDomain>https://cloud.ru</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Mailbox"/>
@@ -23,7 +23,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://echo0x00.github.io/cloudbrief/src/commands/commands.html"/>
+        <SourceLocation DefaultValue="https://echo0x00.github.io/cloudbrief/src/commands/taskpane.html"/>
         <RequestedHeight>250</RequestedHeight>
       </DesktopSettings>
     </Form>
@@ -76,6 +76,7 @@
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://echo0x00.github.io/cloudbrief/src/commands/commands.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://echo0x00.github.io/cloudbrief/src/commands/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Cloud.ru"/>
