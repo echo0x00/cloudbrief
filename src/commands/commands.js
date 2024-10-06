@@ -11,7 +11,7 @@
 // });
 
 Office.initialize = function (reason) {
-  Office.context.mailbox.item.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
+  Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
 };
 
 function displayNotification(message) {
@@ -37,57 +37,42 @@ function action(event) {
   const item = Office.context.mailbox.item;
 
   if (item.itemType === Office.MailboxEnums.ItemType.Message) {
-    item.body.setAsync("<p>New HTML content for the email body.</p>", { coercionType: Office.CoercionType.Html });
-  }
+    item.body.getAsync("html", function (result) {
+      if (result.status === Office.AsyncResultStatus.Succeeded) {
+        body = result.value;
 
-  event.completed();
+        if (body.indexOf("фишинг") > -1) {
+          var url = new URI("dialog.html").absoluteTo(window.location).toString();
+          console.log(url);
+          Office.context.ui.displayDialogAsync(url, { height: 30, width: 50, displayInIframe: true }, () => {
+            // event.completed();
+          });
+        }
+      }
+    });
+  }
 }
 
 function itemChanged(eventArgs) {
   const item = Office.context.mailbox.item;
-  let subject = "test";
 
-  displayNotification(item);
+  console.log(item.itemType);
 
-  // item.subject.getAsync({ asyncContext: item }, function (asyncResult) {
-  //   if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-  //     subject = asyncResult.value;
-  //     console.log(`Открыто письмо с темой: ${subject}`);
-  //     // Добавьте здесь код для обработки вашего события
-  //   } else {
-  //     console.error("Ошибка получения темы", asyncResult.error);
-  //   }
-  // });
+  if (item.itemType === Office.MailboxEnums.ItemType.Message) {
+    item.body.getAsync("html", function (result) {
+      if (result.status === Office.AsyncResultStatus.Succeeded) {
+        body = result.value;
 
-  // if (item.itemType === Office.MailboxEnums.ItemType.Message) {
-  //   item.body.setAsync(
-  //     "<p>New HTML content for the email body.</p>",
-  //     { coercionType: Office.CoercionType.Html },
-  //     function (asyncResult) {
-  //       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-  //         console.error("Failed to set body:", asyncResult.error.message);
-  //       } else {
-  //         console.log("Body content set successfully.");
-  //       }
-  //     }
-  //   );
-  // }
+        if (body.indexOf("фишинг") > -1) {
+          var url = new URI("dialog.html").absoluteTo(window.location).toString();
+          console.log(url);
+          Office.context.ui.displayDialogAsync(url, { height: 30, width: 50, displayInIframe: true }, () => {
+            event.completed();
+          });
+        }
+      }
+    });
+  }
 }
 
-// function getGlobal() {
-//   return typeof self !== "undefined"
-//     ? self
-//     : typeof window !== "undefined"
-//       ? window
-//       : typeof global !== "undefined"
-//         ? global
-//         : undefined;
-// }
-
-// var g = getGlobal();
-
-// // the add-in command functions need to be available in global scope
-// g.action = action;
-
-// Register the function with Office.
 Office.actions.associate("action", action);
