@@ -1,4 +1,31 @@
 <html>
-<body>
-    <p style="font-size: 18px;">ЭТО ВИРУС, ЗАКРОЙТ!!!</p>
-</body></html>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+    }
+
+    #alarm {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      font-family: sans-serif;
+      font-size: 18px;
+      line-height: 30px;
+    }
+
+    b {
+      padding: 0 5px;
+    }
+  </style>
+  <body style="background-color: rgb(255, 211, 211)">
+    <p id="alarm"></p>
+  </body>
+  <script>
+    const regex = /from\=(.*)&/g;
+    const loc = window.location.search;
+    const matches = regex.exec(loc);
+    const email = matches[1];
+    document.querySelector("#alarm").innerHTML = `В письме от <b>${email}</b> есть признаки фишинга. Обратитесь в ЦКЗ`;
+  </script>
+</html>

@@ -5,16 +5,31 @@
 
 /* global Office */
 
-// Office.onReady(() => {
-//   // Office.context.mailbox.item.notificationMessages.replaceAsync("action", "read");
-//   // displayNotification("Это тестовое уведомление.");
-// });
+Office.onReady(() => {
+  // Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
+  // console.log("Item Change event registered.");
+});
 
-Office.initialize = function (reason) {
-  Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
-};
+Office.initialize = function (reason) {};
+
+function displayError(message) {
+  Office.context.mailbox.item.notificationMessages.removeAsync("err");
+  Office.context.mailbox.item.notificationMessages.addAsync(
+    "err",
+    {
+      type: "errorMessage",
+      message: message,
+    },
+    function (asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+        console.error("Ошибка добавления уведомления: " + asyncResult.error.message);
+      }
+    }
+  );
+}
 
 function displayNotification(message) {
+  Office.context.mailbox.item.notificationMessages.removeAsync("info");
   Office.context.mailbox.item.notificationMessages.addAsync(
     "info",
     {
@@ -32,53 +47,57 @@ function displayNotification(message) {
 }
 
 function action(event) {
-  // displayNotification("Просто тестовое уведомление.");
-
-  const item = Office.context.mailbox.item; 
+  const item = Office.context.mailbox.item;
 
   if (item.itemType === Office.MailboxEnums.ItemType.Message) {
-   item.body.getAsync(
-    "html",
-    function (result) {
+    item.body.getAsync("html", function (result) {
       if (result.status === Office.AsyncResultStatus.Succeeded) {
         body = result.value;
 
-        if (body.indexOf("фишинг") > -1)
-        {
-          console.log(window.location.origin);
+        if (body.indexOf("фишинг") > -1 || item.from.emailAddress.indexOf("cloud.ru") == -1) {
+          setTimeout(() => {
+            displayError("Письмо похоже на фишинг");
+            event.completed();
+          }, 5000);
+
           Office.context.ui.displayDialogAsync(
-            'https://echo0x00.github.io/cloudbrief/src/dialog/dialog.html', 
-            {height: 30, width: 50, promptBeforeOpen: false, }, () => {event.completed();}          
+            "https://echo0x00.github.io/cloudbrief/src/dialog/dialog.html?from=" + item.from.emailAddress,
+            { height: 40, width: 50, displayInIframe: true },
+            function (asyncResult) {}
           );
+        } else {
+          displayNotification("Фишинг не обнаружен.");
+          event.completed();
         }
       }
-    }
-  )
+    });
   }
 }
 
-function itemChanged(eventArgs) {
-  const item = Office.context.mailbox.item; 
+// function itemChanged(eventArgs) {
+//   console.log("Another email message selected");
 
-  if (item.itemType === Office.MailboxEnums.ItemType.Message) {
-   item.body.getAsync(
-    "html",
-    function (result) {
-      if (result.status === Office.AsyncResultStatus.Succeeded) {
-        body = result.value;
+//   const item = Office.context.mailbox.item;
 
-        if (body.indexOf("фишинг") > -1)
-        {
-          console.log(window.location.origin);
-          Office.context.ui.displayDialogAsync(
-            'https://echo0x00.github.io/cloudbrief/src/dialog/dialog.html', 
-            {height: 30, width: 50, promptBeforeOpen: false, }, () => {event.completed();}          
-          );
-        }
-      }
-    }
-  )
-  }
-}
+//   console.log(item.itemType);
+
+//   if (item.itemType === Office.MailboxEnums.ItemType.Message) {
+//     item.body.getAsync("html", function (result) {
+//       if (result.status === Office.AsyncResultStatus.Succeeded) {
+//         body = result.value;
+
+//         if (body.indexOf("фишинг") > -1 || body.indexOf("asd") > -1) {
+//           Office.context.ui.displayDialogAsync(
+//             "https://echo0x00.github.io/cloudbrief/src/dialog/dialog.html",
+//             { height: 30, width: 50, displayInIframe: true },
+//             () => {
+//                event.completed();
+//             }
+//           );
+//         }
+//       }
+//     });
+//   }
+// }
 
 Office.actions.associate("action", action);

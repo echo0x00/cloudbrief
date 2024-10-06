@@ -4,10 +4,10 @@
   <Version>1.0.12.3</Version>
   <ProviderName>Cloud.ru</ProviderName>
   <DefaultLocale>en-EN</DefaultLocale>
-  <DisplayName DefaultValue="Cloud-Brief"/>
-  <Description DefaultValue="Test for RnDays"/>
-  <IconUrl DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-128.png"/>
+  <DisplayName DefaultValue="Cloud Brief"/>
+  <Description DefaultValue="Ищем фишинг используя LLM"/>
+  <IconUrl DefaultValue="https://echo0x00.github.io/cloudbrief/assets/cloud.ru.png"/>
+  <HighResolutionIconUrl DefaultValue="https://echo0x00.github.io/cloudbrief/assets/cloud.ru.png"/>
   <SupportUrl DefaultValue="https://cloud.ru"/>
   <AppDomains>
     <AppDomain>echo0x00.github.io</AppDomain>
@@ -70,16 +70,17 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/cloud.ru.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/cloud.ru.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/cloud.ru.png"/>
+        <bt:Image id="Icon.18x18" DefaultValue="https://echo0x00.github.io/cloudbrief/assets/err.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://echo0x00.github.io/cloudbrief/src/commands/commands.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GroupLabel" DefaultValue="Cloud.ru"/>
-        <bt:String id="ActionButton.Label" DefaultValue="Проверка"/>
+        <bt:String id="ActionButton.Label" DefaultValue="Проверить на фишинг"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
