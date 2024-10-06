@@ -11,7 +11,7 @@
 // });
 
 Office.initialize = function (reason) {
-  Office.context.mailbox.item.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
+  Office.context.mailbox.addHandlerAsync(Office.EventType.ItemChanged, itemChanged);
 };
 
 function displayNotification(message) {
@@ -34,60 +34,51 @@ function displayNotification(message) {
 function action(event) {
   // displayNotification("Просто тестовое уведомление.");
 
-  const item = Office.context.mailbox.item;
+  const item = Office.context.mailbox.item; 
 
   if (item.itemType === Office.MailboxEnums.ItemType.Message) {
-    item.body.setAsync("<p>New HTML content for the email body.</p>", { coercionType: Office.CoercionType.Html });
-  }
+   item.body.getAsync(
+    "html",
+    function (result) {
+      if (result.status === Office.AsyncResultStatus.Succeeded) {
+        body = result.value;
 
-  event.completed();
+        if (body.indexOf("фишинг") > -1)
+        {
+          console.log(window.location.origin);
+          Office.context.ui.displayDialogAsync(
+            'https://echo0x00.github.io/cloudbrief/src/dialog/dialog.html', 
+            {height: 30, width: 50, promptBeforeOpen: false, }, () => {event.completed();}          
+          );
+        }
+      }
+    }
+  )
+  }
 }
 
 function itemChanged(eventArgs) {
-  const item = Office.context.mailbox.item;
-  let subject = "test";
+  const item = Office.context.mailbox.item; 
 
-  displayNotification(item);
+  if (item.itemType === Office.MailboxEnums.ItemType.Message) {
+   item.body.getAsync(
+    "html",
+    function (result) {
+      if (result.status === Office.AsyncResultStatus.Succeeded) {
+        body = result.value;
 
-  // item.subject.getAsync({ asyncContext: item }, function (asyncResult) {
-  //   if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-  //     subject = asyncResult.value;
-  //     console.log(`Открыто письмо с темой: ${subject}`);
-  //     // Добавьте здесь код для обработки вашего события
-  //   } else {
-  //     console.error("Ошибка получения темы", asyncResult.error);
-  //   }
-  // });
-
-  // if (item.itemType === Office.MailboxEnums.ItemType.Message) {
-  //   item.body.setAsync(
-  //     "<p>New HTML content for the email body.</p>",
-  //     { coercionType: Office.CoercionType.Html },
-  //     function (asyncResult) {
-  //       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-  //         console.error("Failed to set body:", asyncResult.error.message);
-  //       } else {
-  //         console.log("Body content set successfully.");
-  //       }
-  //     }
-  //   );
-  // }
+        if (body.indexOf("фишинг") > -1)
+        {
+          console.log(window.location.origin);
+          Office.context.ui.displayDialogAsync(
+            'https://echo0x00.github.io/cloudbrief/src/dialog/dialog.html', 
+            {height: 30, width: 50, promptBeforeOpen: false, }, () => {event.completed();}          
+          );
+        }
+      }
+    }
+  )
+  }
 }
 
-// function getGlobal() {
-//   return typeof self !== "undefined"
-//     ? self
-//     : typeof window !== "undefined"
-//       ? window
-//       : typeof global !== "undefined"
-//         ? global
-//         : undefined;
-// }
-
-// var g = getGlobal();
-
-// // the add-in command functions need to be available in global scope
-// g.action = action;
-
-// Register the function with Office.
 Office.actions.associate("action", action);
